@@ -1,17 +1,23 @@
-<!-- <app-login></app-login> -->
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
-    <app-menu></app-menu>
-</aside>
+<div *ngIf="logeado==0">
+    <app-login (eventoEnviar)="recibirLogin($event)"></app-login>    
+</div>
 
-
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-
-    <app-encabezado></app-encabezado>
+<div *ngIf="logeado==1">
     
-    <div class="container-fluid py-4 px-5">
-        <router-outlet></router-outlet>
-        <app-pie></app-pie>
-    </div>
+    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
+        <app-menu></app-menu>
+    </aside>
 
-    
-</main>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+        <app-encabezado></app-encabezado>
+        
+        <div class="container-fluid py-4 px-5">
+            <router-outlet></router-outlet>
+            <app-pie></app-pie>
+        </div>
+
+    </main>
+
+</div>

@@ -1,0 +1,17 @@
+/* Solo el degradado de negro a blanco desde la imagen hacia el formulario */
+.oblique-image::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+}
+
+/* Cambiar fuente a Arial si quieres */
+h3 {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}

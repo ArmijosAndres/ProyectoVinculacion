@@ -3,6 +3,9 @@ npm install jquery --save
 
 ng g c socio/components/socio/listado-socios --skip-tests
 ng g c socio/components/socio/formulario-socio --skip-tests
+
+ng g c socio/pagos --skip-tests
+
 ng g c socio/components/reporte-socios --skip-tests
 ng g c socio/components/socio/pagos --skip-tests
 
@@ -12,7 +15,7 @@ ng g c socio/components/user --skip-tests
 ng g c auth/login --skip-tests
 ng g c auth/formulario --skip-tests
 
-ng g c socio/listado-socios --skip-tests
+
 ng g c socio/formulario-socios --skip-tests
 ng g c reportes/reporte-mensualidades --skip-tests
 ng g c reportes/reporte-socios --skip-tests

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormularioSocios } from '../formulario-socios/formulario-socios';
+declare var $:any;
 
 @Component({
   selector: 'app-listado-socios',

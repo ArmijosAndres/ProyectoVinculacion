@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -7,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrl: './login.css'
 })
 export class Login {
+  
+@Output() eventoEnviar: EventEmitter<any> = new EventEmitter<any>();
 
+  ingresar(){
+
+    this.eventoEnviar.emit(1);
+
+  }
 }
+
+//viewchild - investigar esto

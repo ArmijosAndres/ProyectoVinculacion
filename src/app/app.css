@@ -1,0 +1,15 @@
+/* body{
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+aside{
+    grid-column: 1/4;
+    grid-rows: auto;
+}
+
+@media screen and (max-width 700px) {
+    aside{
+        grid-colums: 1/4;
+        grid-rows: 1;
+    };
+} */

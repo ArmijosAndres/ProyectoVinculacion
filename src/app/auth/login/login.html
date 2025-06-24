@@ -10,10 +10,6 @@
                 </div>
                 <div class="card-body">
                   <form role="form">
-                    <label>Nombre</label>
-                    <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Ingrese su nombre" aria-label="Name" aria-describedby="name-addon">
-                    </div>
                     <label>Correo electrónico</label>
                     <div class="mb-3">
                       <input type="email" class="form-control" placeholder="Ingrese su correo electrónico" aria-label="Email" aria-describedby="email-addon">
@@ -32,7 +28,7 @@
                       <a href="javascript:;" class="text-xs font-weight-bold ms-auto">Olvide la contraseña</a>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn btn-dark w-100 mt-4 mb-3">Ingresar</button>
+                      <button (click)="ingresar()" type="button" class="btn btn-dark w-100 mt-4 mb-3">Ingresar</button>
                       <button type="button" class="btn btn-white btn-icon w-100 mb-3">
                         <span class="btn-inner--icon me-1">
                           <img class="w-5" src="../assets/img/logos/google-logo.svg" alt="google-logo" />
@@ -45,7 +41,7 @@
                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                   <p class="mb-4 text-xs mx-auto">
                     No eres socio CIMO?
-                    <a href="javascript:;" class="text-dark font-weight-bold">Completa el formulario</a>
+                    <a href="formulario.html" class="text-dark font-weight-bold">Completa el formulario</a>
                   </p>
                 </div>
               </div>
@@ -53,7 +49,7 @@
             <!-- Cambiar el logo -->
             <div class="col-md-6">
               <div class="position-absolute w-40 top-0 end-0 h-100 d-md-block d-none">
-                <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8" style="background-image:url('../assets/img/fondoBanner.png')">
+                <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8" style="background-image:url('../assets/img/CimoFondo.png')">
                 </div>
               </div>
             </div>
