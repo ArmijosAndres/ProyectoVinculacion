@@ -1,4 +1,4 @@
-/* Solo el degradado de negro a blanco desde la imagen hacia el formulario */
+/* Solo el degradado de negro a blanco desde la imagen hacia el formulario
 .oblique-image::after {
     content: "";
     position: absolute;
@@ -10,8 +10,9 @@
     z-index: 1;
 }
 
-/* Cambiar fuente a Arial si quieres */
+/* Cambiar fuente a Arial si quieres 
 h3 {
     font-family: Arial, sans-serif;
     text-align: center;
 }
+ */
