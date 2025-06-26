@@ -2,24 +2,17 @@ import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-formulario',
+  standalone: true,
   imports: [],
   templateUrl: './formulario.html',
-  styleUrl: './formulario.css'
+  styleUrls: ['./formulario.css']
 })
 export class Formulario {
 
-  @Output() eventoEnviar: EventEmitter<any> = new EventEmitter<any>();
+  @Output() eventoEnviar = new EventEmitter<number>(); // para loguear (logeado = 1)
 
-  registrar(){
-
-    this.eventoEnviar.emit(0);
-
-  }
-
-  ingresar(){
-
-    this.eventoEnviar.emit(1);
-
+  ingresar() {
+    this.eventoEnviar.emit(1); // el padre pone logeado = 1, carga la app
   }
 
 }

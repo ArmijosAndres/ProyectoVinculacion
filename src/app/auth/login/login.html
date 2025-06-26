@@ -25,7 +25,7 @@
                           Recuerdame por 14 días
                         </label>
                       </div>
-                      <a href="javascript:;" class="text-xs font-weight-bold ms-auto">Olvide la contraseña</a>
+                      <a (click)="registrar()" class="text-xs font-weight-bold ms-auto">Olvide la contraseña</a>
                     </div>
                     <div class="text-center">
                       <button (click)="ingresar()" type="button" class="btn btn-dark w-100 mt-4 mb-3">Ingresar</button>
@@ -41,7 +41,7 @@
                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
                   <p class="mb-4 text-xs mx-auto">
                     No eres socio CIMO?
-                    <a href="formulario.html" class="text-dark font-weight-bold">Completa el formulario</a>
+                    <a (click)="registrar()" class="text-dark font-weight-bold">Completa el formulario</a>
                   </p>
                 </div>
               </div>

@@ -10,9 +10,8 @@
     z-index: 1;
 }
 
-/* Cambiar fuente a Arial si quieres 
-h3 {
+/* Cambiar fuente a Arial si quieres */
+h3, p {
     font-family: Arial, sans-serif;
     text-align: center;
 }
- */

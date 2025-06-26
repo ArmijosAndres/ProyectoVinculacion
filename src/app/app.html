@@ -1,9 +1,13 @@
-<div *ngIf="logeado==0">
-    <app-login (eventoEnviar)="recibirLogin($event)"></app-login>    
+<div *ngIf="logeado == 0 && formularioActual == 'login'">
+  <app-login (eventoEnviar)="recibirLogin($event)" (cambiarFormulario)="formularioActual = 'registro'"></app-login>
 </div>
 
-<div *ngIf="logeado==1">
-    
+<div *ngIf="logeado == 0 && formularioActual == 'registro'">
+  <app-formulario (eventoEnviar)="recibirRegistro($event)" (cambiarFormulario)="formularioActual = 'login'"></app-formulario>
+</div>
+
+<div *ngIf="logeado == 1">
+
     <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 bg-slate-900 fixed-start " id="sidenav-main">
         <app-menu></app-menu>
     </aside>

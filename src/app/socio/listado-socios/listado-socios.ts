@@ -14,3 +14,6 @@ export class ListadoSocios {
     $("#modalformulariosocio").modal("show");
   }
 }
+
+//trabajar con un data table al hacer la funcion de busqueda en la tabla y al hacerlo con la API
+//https://datatables.net/manual/tech-notes/7

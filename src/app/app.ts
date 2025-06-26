@@ -6,18 +6,25 @@ import { Pie } from "./shared/components/pie/pie";
 import { Login } from './auth/login/login';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Formulario } from './auth/formulario/formulario';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Menu, Encabezado, Pie, Login, FormsModule, CommonModule],
+  standalone: true,
+  imports: [RouterOutlet, Menu, Encabezado, Pie, Login, FormsModule, CommonModule, Formulario],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   protected title = 'proyecto_vinculacion';
   logeado: number = 0;
+  formularioActual: 'login' | 'registro' = 'login';
 
   recibirLogin(valor: number){
+    this.logeado=valor;
+  }
+
+  recibirRegistro(valor: number){
     this.logeado=valor;
   }
 }
