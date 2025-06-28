@@ -2488,7 +2488,7 @@ progress {
 }
 
 .table-group-divider {
-  border-top: calc(2 * $table-border-width) solid currentColor;
+  border-top: 2px solid currentColor;
 }
 
 .caption-top {
@@ -5591,7 +5591,7 @@ fieldset:disabled .btn {
 }
 
 .page-item:not(:first-child) .page-link {
-  margin-left: calc($pagination-border-width * -1);
+  margin-left: calc(var(--bs-pagination-border-width) * -1);
 }
 
 .page-item:first-child .page-link {
