@@ -25,4 +25,4 @@ export class Login {
 
 }
 
-//viewchild - investigar esto
+// crear un txt con logins diferentes segun sea socio o administrador

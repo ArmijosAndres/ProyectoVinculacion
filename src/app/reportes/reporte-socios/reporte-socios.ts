@@ -32,3 +32,5 @@ export class ReporteSocios {
   };
 
 }
+
+// en tabla poner por evento de onclick para que se refleje un diagrama de los estados
