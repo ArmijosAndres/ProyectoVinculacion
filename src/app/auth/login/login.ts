@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Formulario } from '../formulario/formulario';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [Formulario],
+  imports: [],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
