@@ -1,1 +1,67 @@
-<p>reporte-socios works!</p>
+<div class="row">
+  <div class="col-12">
+    <div class="card border shadow-xs mb-4">
+      <div class="card-header border-bottom pb-0">
+        <h6 class="font-weight-semibold text-lg mb-0">Reporte de Socio</h6>
+        <p class="text-sm mb-sm-0">Detalles generales del socio registrado</p>
+      </div>
+      <div class="card-body">
+        <!-- Información Personal -->
+        <h6 class="text-md mt-3">Información Personal</h6>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Nombre:</label>
+            <p>Gabriel Encalada</p>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Cédula:</label>
+            <p>0101010101</p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Correo electrónico:</label>
+            <p>gabriel&#64;example.com</p>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Teléfono:</label>
+            <p>0991234567</p>
+          </div>
+        </div>
+
+        <!-- Historial de Pagos -->
+        <h6 class="text-md mt-4">Historial de Pagos</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="bg-gray-100">
+              <tr>
+                <th>Fecha</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Comprobante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>01/06/2025</td>
+                <td>$50.00</td>
+                <td><span class="badge fw-bold" style="background-color: #198754; color: white;">Pagado</span></td>
+                <td><a href="#" class="btn btn-sm btn-outline-dark">Ver imagen</a></td>
+              </tr>
+              <tr>
+                <td>01/05/2025</td>
+                <td>$50.00</td>
+                <td><span class="badge fw-bold" style="background-color: #ffc107; color: white;">Pendiente</span></td>
+                <td><a href="#" class="btn btn-sm btn-outline-dark disabled">No disponible</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Observaciones -->
+        <h6 class="text-md mt-4">Observaciones</h6>
+        <p class="text-sm">El socio tiene pagos al día y mantiene contacto activo. Requiere actualización de datos personales en próximos meses.</p>
+      </div>
+    </div>
+  </div>
+</div>
