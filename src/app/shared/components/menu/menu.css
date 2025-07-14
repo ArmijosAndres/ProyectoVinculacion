@@ -1,0 +1,23 @@
+#sidenav-main {
+    background-color: #0f172a !important;
+    color: white;
+}
+
+#sidenav-main .nav-link,
+#sidenav-main .nav-link-text,
+#sidenav-main .navbar-brand,
+#sidenav-main .icon {
+  color: white !important;
+}
+
+#sidenav-main .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+#sidenav-main ul.navbar-nav {
+  padding-left: 0.75rem;
+}
+
+#sidenav-main .nav-item {
+  margin-bottom: 0.5rem;
+}
