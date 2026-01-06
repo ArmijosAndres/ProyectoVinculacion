@@ -1,0 +1,54 @@
+/* LOGO BASE */
+.logo-hotmetal {
+    width: 300px;
+    opacity: 0;
+    animation: heatGlow 2.4s ease forwards;
+}
+
+/* ANIMACIÓN DE CALOR / METAL AL ROJO VIVO */
+@keyframes heatGlow {
+
+    /* 0% — Logo desvanecido */
+    0% {
+        opacity: 0;
+        filter: brightness(0.3) saturate(0.8);
+    }
+
+    /* 25% — Comienza a iluminarse */
+    25% {
+        opacity: 1;
+        filter: brightness(1.2) drop-shadow(0 0 10px #ff5500);
+    }
+
+    /* 45% — Punto máximo de calor (al rojo vivo) */
+    45% {
+        filter: brightness(1.9) 
+                drop-shadow(0 0 15px #ff3300)
+                drop-shadow(0 0 35px #ff2200)
+                saturate(1.4);
+    }
+
+    /* 70% — Comienza a enfriarse */
+    70% {
+        filter: brightness(1.1) drop-shadow(0 0 8px #ff8844);
+    }
+
+    /* 100% — Metal frío normal */
+    100% {
+        opacity: 1;
+        filter: brightness(1) drop-shadow(0 0 0px transparent);
+    }
+}
+
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*background-color: #ffffff; /* O el color de tu app */
+  z-index: 9999; /* Para que esté por encima de todo */
+}

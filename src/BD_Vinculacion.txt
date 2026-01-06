@@ -1,0 +1,305 @@
+-- ============================================
+-- BASE DE DATOS: Sistema de Gestión de Socios
+-- ============================================
+
+-- Crear la base de datos
+CREATE DATABASE gestion_socios;
+
+-- Conectar a la base de datos
+\c gestion_socios;
+
+-- ============================================
+-- TABLA: roles
+-- Almacena los diferentes roles del sistema
+-- ============================================
+CREATE TABLE roles (
+    id_rol SERIAL PRIMARY KEY,
+    nombre_rol VARCHAR(50) NOT NULL UNIQUE,
+    descripcion TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insertar los roles predefinidos
+INSERT INTO roles (nombre_rol, descripcion) VALUES 
+    ('Presidente', 'Acceso total al sistema'),
+    ('Secretario', 'Puede visualizar información de socios y generar reportes'),
+    ('Tesorero', 'Gestiona mensualidades y genera reportes financieros'),
+    ('Socio', 'Acceso básico, puede ver y actualizar su información personal'),
+    ('Usuario', 'Usuario sin aprobar, puede ver requisitos e intentar registrarse');
+
+-- ============================================
+-- TABLA: usuarios
+-- Almacena la información de todos los usuarios del sistema
+-- ============================================
+CREATE TABLE usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    id_rol INTEGER NOT NULL,
+    cedula VARCHAR(10) UNIQUE NOT NULL,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    telefono VARCHAR(10),
+    direccion TEXT,
+    fecha_nacimiento DATE,
+    password_hash VARCHAR(255) NOT NULL,
+    estado VARCHAR(20) DEFAULT 'pendiente', -- pendiente, activo, inactivo, dado_de_baja
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_aprobacion TIMESTAMP,
+    aprobado_por INTEGER, -- ID del usuario que aprobó (Presidente o Secretaria)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_rol) REFERENCES roles(id_rol),
+    FOREIGN KEY (aprobado_por) REFERENCES usuarios(id_usuario)
+);
+
+-- Índices para mejorar el rendimiento de búsquedas
+CREATE INDEX idx_usuarios_cedula ON usuarios(cedula);
+CREATE INDEX idx_usuarios_email ON usuarios(email);
+CREATE INDEX idx_usuarios_estado ON usuarios(estado);
+CREATE INDEX idx_usuarios_rol ON usuarios(id_rol);
+
+-- ============================================
+-- TABLA: socios
+-- Información adicional específica de los socios
+-- ============================================
+CREATE TABLE socios (
+    id_socio SERIAL PRIMARY KEY,
+    id_usuario INTEGER NOT NULL UNIQUE,
+    numero_socio VARCHAR(20) UNIQUE NOT NULL, -- Número único de identificación del socio
+    fecha_ingreso DATE NOT NULL,
+    fecha_baja DATE,
+    motivo_baja TEXT,
+    tipo_membresia VARCHAR(50) DEFAULT 'regular', -- regular, honorario, etc.
+    cuota_mensual DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    observaciones TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+);
+
+-- Índice para búsquedas por número de socio
+CREATE INDEX idx_socios_numero ON socios(numero_socio);
+CREATE INDEX idx_socios_usuario ON socios(id_usuario);
+
+-- ============================================
+-- TABLA: pagos
+-- Registra todos los pagos mensuales de los socios
+-- ============================================
+CREATE TABLE pagos (
+    id_pago SERIAL PRIMARY KEY,
+    id_socio INTEGER NOT NULL,
+    mes INTEGER NOT NULL CHECK (mes BETWEEN 1 AND 12),
+    anio INTEGER NOT NULL CHECK (anio >= 2024),
+    monto DECIMAL(10,2) NOT NULL,
+    fecha_pago DATE NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    metodo_pago VARCHAR(50), -- efectivo, transferencia, deposito, etc.
+    numero_comprobante VARCHAR(100),
+    comprobante_url TEXT, -- URL o ruta donde se guarda la imagen del comprobante
+    estado_pago VARCHAR(20) DEFAULT 'pendiente', -- pendiente, aprobado, rechazado
+    observaciones TEXT,
+    registrado_por INTEGER, -- ID del usuario que registró el pago
+    aprobado_por INTEGER, -- ID del tesorero o presidente que aprobó
+    fecha_aprobacion TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_socio) REFERENCES socios(id_socio) ON DELETE CASCADE,
+    FOREIGN KEY (registrado_por) REFERENCES usuarios(id_usuario),
+    FOREIGN KEY (aprobado_por) REFERENCES usuarios(id_usuario),
+    -- Evitar pagos duplicados para el mismo mes/año
+    UNIQUE(id_socio, mes, anio)
+);
+
+-- Índices para consultas frecuentes
+CREATE INDEX idx_pagos_socio ON pagos(id_socio);
+CREATE INDEX idx_pagos_fecha ON pagos(fecha_pago);
+CREATE INDEX idx_pagos_estado ON pagos(estado_pago);
+CREATE INDEX idx_pagos_periodo ON pagos(anio, mes);
+
+-- ============================================
+-- TABLA: solicitudes_registro
+-- Guarda las solicitudes de registro de nuevos usuarios
+-- ============================================
+CREATE TABLE solicitudes_registro (
+    id_solicitud SERIAL PRIMARY KEY,
+    cedula VARCHAR(20) NOT NULL,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    telefono VARCHAR(20),
+    direccion TEXT,
+    fecha_nacimiento DATE,
+    estado_solicitud VARCHAR(20) DEFAULT 'pendiente', -- pendiente, aprobada, rechazada
+    fecha_solicitud TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    revisado_por INTEGER, -- ID del usuario que revisó la solicitud
+    fecha_revision TIMESTAMP,
+    motivo_rechazo TEXT,
+    observaciones TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (revisado_por) REFERENCES usuarios(id_usuario)
+);
+
+-- Índice para consultas de solicitudes pendientes
+CREATE INDEX idx_solicitudes_estado ON solicitudes_registro(estado_solicitud);
+CREATE INDEX idx_solicitudes_fecha ON solicitudes_registro(fecha_solicitud);
+
+-- ============================================
+-- TABLA: requisitos_membresia
+-- Define los requisitos para ser socio
+-- ============================================
+CREATE TABLE requisitos_membresia (
+    id_requisito SERIAL PRIMARY KEY,
+    titulo VARCHAR(200) NOT NULL,
+    descripcion TEXT NOT NULL,
+    es_obligatorio BOOLEAN DEFAULT true,
+    orden INTEGER DEFAULT 0,
+    activo BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- TABLA: auditorias
+-- Registra cambios importantes en el sistema
+-- ============================================
+CREATE TABLE auditorias (
+    id_auditoria SERIAL PRIMARY KEY,
+    id_usuario INTEGER NOT NULL,
+    accion VARCHAR(100) NOT NULL, -- login, actualizar_perfil, aprobar_pago, dar_baja, etc.
+    tabla_afectada VARCHAR(50),
+    id_registro_afectado INTEGER,
+    datos_anteriores JSONB,
+    datos_nuevos JSONB,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    fecha_accion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+);
+
+-- Índice para búsquedas de auditoría
+CREATE INDEX idx_auditorias_usuario ON auditorias(id_usuario);
+CREATE INDEX idx_auditorias_fecha ON auditorias(fecha_accion);
+CREATE INDEX idx_auditorias_accion ON auditorias(accion);
+
+-- ============================================
+-- TABLA: configuracion_sistema
+-- Almacena configuraciones generales del sistema
+-- ============================================
+CREATE TABLE configuracion_sistema (
+    id_config SERIAL PRIMARY KEY,
+    clave VARCHAR(100) UNIQUE NOT NULL,
+    valor TEXT NOT NULL,
+    descripcion TEXT,
+    tipo_dato VARCHAR(20) DEFAULT 'string', -- string, number, boolean, json
+    modificable BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Configuraciones iniciales
+INSERT INTO configuracion_sistema (clave, valor, descripcion, tipo_dato) VALUES 
+    ('cuota_mensual_default', '25.00', 'Cuota mensual por defecto para nuevos socios', 'number'),
+    ('dias_gracia_pago', '5', 'Días de gracia después del vencimiento del pago', 'number'),
+    ('nombre_sociedad', 'Sociedad de Ejemplo', 'Nombre de la sociedad', 'string'),
+    ('email_contacto', 'contacto@sociedad.com', 'Email de contacto de la sociedad', 'string');
+
+-- ============================================
+-- FUNCIONES Y TRIGGERS
+-- ============================================
+
+-- Función para actualizar el campo updated_at automáticamente
+CREATE OR REPLACE FUNCTION actualizar_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Aplicar trigger a las tablas que tienen updated_at
+CREATE TRIGGER trigger_usuarios_updated_at
+    BEFORE UPDATE ON usuarios
+    FOR EACH ROW
+    EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_socios_updated_at
+    BEFORE UPDATE ON socios
+    FOR EACH ROW
+    EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_pagos_updated_at
+    BEFORE UPDATE ON pagos
+    FOR EACH ROW
+    EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_config_updated_at
+    BEFORE UPDATE ON configuracion_sistema
+    FOR EACH ROW
+    EXECUTE FUNCTION actualizar_updated_at();
+
+-- ============================================
+-- VISTAS ÚTILES
+-- ============================================
+
+-- Vista para obtener información completa de socios con sus usuarios
+CREATE VIEW vista_socios_completa AS
+SELECT 
+    s.id_socio,
+    s.numero_socio,
+    u.cedula,
+    u.nombres,
+    u.apellidos,
+    u.email,
+    u.telefono,
+    u.direccion,
+    u.estado AS estado_usuario,
+    s.fecha_ingreso,
+    s.tipo_membresia,
+    s.cuota_mensual,
+    r.nombre_rol,
+    COUNT(DISTINCT p.id_pago) AS total_pagos_realizados
+FROM socios s
+INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+INNER JOIN roles r ON u.id_rol = r.id_rol
+LEFT JOIN pagos p ON s.id_socio = p.id_socio AND p.estado_pago = 'aprobado'
+GROUP BY s.id_socio, s.numero_socio, u.cedula, u.nombres, u.apellidos, 
+         u.email, u.telefono, u.direccion, u.estado, s.fecha_ingreso, 
+         s.tipo_membresia, s.cuota_mensual, r.nombre_rol;
+
+-- Vista para reportes de pagos mensuales
+CREATE VIEW vista_pagos_mensuales AS
+SELECT 
+    p.id_pago,
+    s.numero_socio,
+    u.nombres || ' ' || u.apellidos AS nombre_completo,
+    p.mes,
+    p.anio,
+    p.monto,
+    p.fecha_pago,
+    p.estado_pago,
+    p.metodo_pago,
+    p.comprobante_url,
+    u_aprobador.nombres || ' ' || u_aprobador.apellidos AS aprobado_por_nombre
+FROM pagos p
+INNER JOIN socios s ON p.id_socio = s.id_socio
+INNER JOIN usuarios u ON s.id_usuario = u.id_usuario
+LEFT JOIN usuarios u_aprobador ON p.aprobado_por = u_aprobador.id_usuario;
+
+-- ============================================
+-- COMENTARIOS EN LAS TABLAS
+-- ============================================
+
+COMMENT ON TABLE usuarios IS 'Almacena información de todos los usuarios del sistema';
+COMMENT ON TABLE socios IS 'Información específica de los socios activos';
+COMMENT ON TABLE pagos IS 'Registro de todos los pagos mensuales realizados';
+COMMENT ON TABLE solicitudes_registro IS 'Solicitudes de registro pendientes de aprobación';
+COMMENT ON TABLE auditorias IS 'Log de acciones importantes en el sistema para trazabilidad';
+
+-- ============================================
+-- DATOS DE PRUEBA (OPCIONAL)
+-- ============================================
+
+-- Usuario Presidente (password: presidente123)
+INSERT INTO usuarios (id_rol, cedula, nombres, apellidos, email, telefono, password_hash, estado, fecha_aprobacion)
+VALUES (1, '0701234567', 'Juan', 'Pérez Presidente', 'presidente@sociedad.com', '0987654321', 
+        '$2a$10$ejemplo_hash_password', 'activo', CURRENT_TIMESTAMP);
