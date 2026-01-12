@@ -5,7 +5,7 @@
 
 export const environment = {
   production: true,
-  apiUrl: 'https://vinculacionlaravel-production.up.railway.app/',
+  apiUrl: 'https://vinculacionlaravel-production.up.railway.app/api',
   appName: 'Sistema de Gestión de Socios CIMO',
   version: '1.0.0',
   
